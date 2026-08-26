@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Last Machine Ultra</title>
+    <style>
+      :root {
+        --bg: #0a0c0f;
+        --panel: #12161b;
+        --panel-2: #171c23;
+        --line: #232b35;
+        --ink: #e6edf3;
+        --dim: #7d8896;
+        --accent: #4ec9b0;
+        --warn: #e2b341;
+        --dead: #6b3b3b;
+        --out: #d4645f;
+        --win: #57d98a;
+        --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 14px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        padding: 20px 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: 0.22em;
+        font-weight: 600;
+      }
+
+      .sub { color: var(--dim); font-size: 12px; }
+      .sub b { color: var(--ink); font-weight: 500; }
+
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 20px;
+        padding: 20px 24px 48px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 900px) {
+        main { grid-template-columns: minmax(0, 1fr); }
+      }
+
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      h2 {
+        margin: 0;
+        padding: 12px 16px;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        color: var(--dim);
+        text-transform: uppercase;
+        font-weight: 600;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel-2);
+      }
+
+      .yard { padding: 20px 16px; }
+
+      .hour {
+        font-size: 46px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+      .hour small {
+        font-size: 13px;
+        color: var(--dim);
+        letter-spacing: 0.12em;
+        font-weight: 400;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .dials {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .dial {
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 10px 12px;
+      }
+      .dial b { display: block; font-size: 18px; font-weight: 600; }
+      .dial span {
+        font-size: 10px;
+        color: var(--dim);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+      .chip {
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--dim);
+      }
+      .chip.hazard { color: var(--warn); border-color: #4a3c19; background: #241d0d; }
+      .chip.decider { color: #0a0c0f; background: var(--warn); border-color: var(--warn); }
+
+      table { width: 100%; border-collapse: collapse; }
+      th {
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+        font-weight: 500;
+        padding: 8px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      td { padding: 9px 16px; border-bottom: 1px solid #1a1f26; vertical-align: baseline; }
+      tr:last-child td { border-bottom: none; }
+
+      .bib { color: var(--dim); width: 34px; }
+      .name { font-weight: 500; }
+      .team { color: var(--dim); font-size: 12px; }
+      .yards { text-align: right; font-variant-numeric: tabular-nums; width: 56px; }
+      .why { color: var(--dim); font-size: 11px; }
+
+      tr.out { opacity: 0.42; }
+      tr.out .name { text-decoration: line-through; text-decoration-color: var(--dead); }
+      tr.winner { background: #10251a; }
+      tr.winner .name { color: var(--win); }
+
+      .tag {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 3px;
+      }
+      .tag.standing { color: var(--accent); border: 1px solid #1e4740; }
+      .tag.out { color: var(--out); border: 1px solid #4a2422; }
+      .tag.winner { color: #0a0c0f; background: var(--win); font-weight: 600; }
+      .tag.assist { color: var(--warn); border: 1px solid #4a3c19; }
+
+      #feed { max-height: 460px; overflow-y: auto; }
+      .item {
+        padding: 9px 16px;
+        border-bottom: 1px solid #1a1f26;
+        font-size: 12px;
+        display: flex;
+        gap: 10px;
+      }
+      .item .h {
+        color: var(--dim);
+        min-width: 34px;
+        font-variant-numeric: tabular-nums;
+      }
+      .item.out .t { color: var(--out); }
+      .item.bell .t { color: var(--accent); }
+      .item.end .t { color: var(--warn); font-weight: 600; }
+
+      .result {
+        padding: 18px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel-2);
+      }
+      .result .big { font-size: 20px; font-weight: 600; }
+      .result .big.win { color: var(--win); }
+      .result .big.none { color: var(--out); }
+
+      footer {
+        color: var(--dim);
+        font-size: 11px;
+        text-align: center;
+        padding: 0 24px 40px;
+      }
+
+      .stack { display: flex; flex-direction: column; gap: 20px; }
+      .empty { padding: 20px 16px; color: var(--dim); font-size: 12px; }
+      .pulse { animation: pulse 2s ease-in-out infinite; }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>LAST MACHINE ULTRA</h1>
+        <div class="sub" id="tagline">every hour, on the hour, the yard gets harder</div>
+      </div>
+      <div class="sub" id="meta">connecting&hellip;</div>
+    </header>
+
+    <main>
+      <div class="stack">
+        <section>
+          <h2>The yard</h2>
+          <div class="yard" id="yard"></div>
+        </section>
+
+        <section>
+          <h2>The corral</h2>
+          <div id="corral"></div>
+        </section>
+
+        <section>
+          <h2>Teams</h2>
+          <div id="teams"></div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section id="result-panel" style="display: none">
+          <h2>Result</h2>
+          <div class="result" id="result"></div>
+        </section>
+
+        <section>
+          <h2>Race feed</h2>
+          <div id="feed"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      seeded, reproducible, and entirely unfair by design &mdash;
+      <span id="seedline"></span>
+    </footer>
+
+    <script>
+      const el = (id) => document.getElementById(id);
+      const esc = (s) =>
+        String(s).replace(/[&<>"']/g, (ch) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch],
+        );
+
+      function renderYard(state) {
+        const y = state.current;
+        if (!y) {
+          el('yard').innerHTML =
+            state.status === 'finished'
+              ? '<div class="hour"><small>Race over</small>' + state.hour + '</div>'
+              : '<div class="hour pulse"><small>Waiting for the bell</small>&mdash;</div>';
+          return;
+        }
+
+        const chips = [];
+        if (y.decider) chips.push('<span class="chip decider">decider</span>');
+        for (const h of y.hazards) chips.push('<span class="chip hazard">' + esc(h) + '</span>');
+        for (const f of y.families) chips.push('<span class="chip">' + esc(f) + '</span>');
+
+        el('yard').innerHTML = `
+          <div class="hour"><small>Hour</small>${y.hour}</div>
+          <div class="dials">
+            <div class="dial"><b>${y.tier}</b><span>tier</span></div>
+            <div class="dial"><b>${y.taskCount}</b><span>tasks</span></div>
+            <div class="dial"><b>${esc(y.cutoff)}</b><span>cutoff</span></div>
+            <div class="dial"><b>${y.tokenBudget}</b><span>tokens</span></div>
+            <div class="dial"><b>${state.corral}/${state.starters}</b><span>standing</span></div>
+          </div>
+          <div class="chips">${chips.join('')}</div>
+        `;
+      }
+
+      function renderCorral(state) {
+        if (!state.entrants.length) {
+          el('corral').innerHTML = '<div class="empty">no entrants</div>';
+          return;
+        }
+        const rows = state.entrants
+          .map((e) => {
+            const isOut = e.status === 'out' || e.status === 'no_winner';
+            const tag =
+              e.status === 'winner'
+                ? '<span class="tag winner">winner</span>'
+                : e.assist
+                  ? '<span class="tag assist">assist</span>'
+                  : isOut
+                    ? '<span class="tag out">dnf</span>'
+                    : '<span class="tag standing">standing</span>';
+            const why = isOut
+              ? 'hour ' + e.outAtHour + ' &middot; ' + esc(String(e.outReason || '').replace(/_/g, ' '))
+              : '';
+            return `
+              <tr class="${e.status === 'winner' ? 'winner' : isOut ? 'out' : ''}">
+                <td class="bib">${e.bib}</td>
+                <td><div class="name">${esc(e.name)}</div><div class="team">${esc(e.team)}</div></td>
+                <td class="yards">${e.yards}</td>
+                <td>${tag}<div class="why">${why}</div></td>
+              </tr>`;
+          })
+          .join('');
+
+        el('corral').innerHTML =
+          '<table><thead><tr><th>#</th><th>Entrant</th><th class="yards">Yards</th><th>Status</th></tr></thead><tbody>' +
+          rows +
+          '</tbody></table>';
+      }
+
+      function renderTeams(state) {
+        if (!state.teams.length) {
+          el('teams').innerHTML = '<div class="empty">no teams</div>';
+          return;
+        }
+        el('teams').innerHTML =
+          '<table><tbody>' +
+          state.teams
+            .map(
+              (t) => `
+              <tr class="${t.won ? 'winner' : ''}">
+                <td><div class="name">${esc(t.team)}</div><div class="team">${t.entrants} entrant${
+                  t.entrants === 1 ? '' : 's'
+                }, ${t.survivors} still in</div></td>
+                <td class="yards">${t.bestYards}</td>
+              </tr>`,
+            )
+            .join('') +
+          '</tbody></table>';
+      }
+
+      function renderFeed(state) {
+        el('feed').innerHTML = state.feed
+          .map(
+            (f) =>
+              `<div class="item ${esc(f.kind)}"><span class="h">${
+                f.hour ? 'h' + f.hour : '&mdash;'
+              }</span><span class="t">${esc(f.text)}</span></div>`,
+          )
+          .join('');
+      }
+
+      function renderResult(state) {
+        if (state.status !== 'finished') {
+          el('result-panel').style.display = 'none';
+          return;
+        }
+        el('result-panel').style.display = '';
+        if (state.winner) {
+          el('result').innerHTML = `
+            <div class="big win">${esc(state.winner.name)}</div>
+            <div class="sub">${esc(state.winner.team)} &middot; ${state.winner.yards} yards</div>
+            ${
+              state.assist
+                ? '<div class="sub" style="margin-top:10px">assist: ' +
+                  esc(state.assist.name) +
+                  ' (' + esc(state.assist.team) + '), ' + state.assist.yards + ' yards</div>'
+                : ''
+            }`;
+        } else {
+          el('result').innerHTML = `
+            <div class="big none">No winner</div>
+            <div class="sub">the corral emptied at hour ${state.hour}</div>
+            ${
+              state.assist
+                ? '<div class="sub" style="margin-top:10px">furthest: ' +
+                  esc(state.assist.name) + ', ' + state.assist.yards + ' yards</div>'
+                : ''
+            }`;
+        }
+      }
+
+      function render(state) {
+        el('meta').innerHTML =
+          '<b>' + esc(state.seed) + '</b> &middot; ' + esc(state.clock) + ' &middot; ' + esc(state.status);
+        el('seedline').textContent = 'seed ' + state.seed;
+        if (state.next && state.status !== 'finished') {
+          el('tagline').textContent = 'next: ' + state.next.label;
+        }
+        renderYard(state);
+        renderCorral(state);
+        renderTeams(state);
+        renderFeed(state);
+        renderResult(state);
+      }
+
+      const source = new EventSource('/events');
+      source.onmessage = (event) => render(JSON.parse(event.data));
+      source.onerror = () => {
+        el('meta').textContent = 'disconnected';
+      };
+    </script>
+  </body>
+</html>

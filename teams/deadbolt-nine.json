@@ -1,0 +1,11 @@
+{
+  "team": "Deadbolt Nine",
+  "slug": "deadbolt-nine",
+  "contact": "nine@example.com",
+  "country": "DE",
+  "motto": "Built for hour thirty. Sometimes gets there.",
+  "entrants": [
+    { "name": "Riegel", "adapter": "local", "bot": "bricklayer" },
+    { "name": "Sperre", "adapter": "local", "bot": "grinder" }
+  ]
+}

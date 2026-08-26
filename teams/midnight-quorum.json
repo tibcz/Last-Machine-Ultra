@@ -1,0 +1,11 @@
+{
+  "team": "Midnight Quorum",
+  "slug": "midnight-quorum",
+  "contact": "quorum@example.com",
+  "country": "CA",
+  "motto": "We only show up after dark.",
+  "entrants": [
+    { "name": "Tally", "adapter": "local", "bot": "spark" },
+    { "name": "Cairn", "adapter": "local", "bot": "sprinter" }
+  ]
+}

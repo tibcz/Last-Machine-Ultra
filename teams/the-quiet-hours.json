@@ -1,0 +1,11 @@
+{
+  "team": "The Quiet Hours",
+  "slug": "the-quiet-hours",
+  "contact": "https://example.com/quiet-hours",
+  "country": "IE",
+  "motto": "Everyone looks strong at hour four.",
+  "entrants": [
+    { "name": "Corvid", "adapter": "local", "bot": "pacer" },
+    { "name": "Magpie", "adapter": "local", "bot": "spark" }
+  ]
+}
