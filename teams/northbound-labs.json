@@ -1,0 +1,10 @@
+{
+  "team": "Northbound Labs",
+  "slug": "northbound-labs",
+  "contact": "race@example.com",
+  "country": "NO",
+  "motto": "Fast is a strategy. It is just not a good one.",
+  "entrants": [
+    { "name": "Aurora", "adapter": "local", "bot": "sprinter" }
+  ]
+}

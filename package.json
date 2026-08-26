@@ -1,0 +1,34 @@
+{
+  "name": "last-machine-ultra",
+  "version": "0.1.0",
+  "description": "A backyard-ultra for machines. Every hour, on the hour, the bell rings and the yard gets harder. Last machine standing wins.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "bin": {
+    "lmu": "./dist/cli.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "lmu": "node dist/cli.js",
+    "race": "npm run build && node dist/cli.js simulate",
+    "serve": "npm run build && node dist/cli.js serve",
+    "roster": "npm run build && node dist/cli.js roster"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build and test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20.x', '22.x']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: node --test dist/test/*.test.js
+
+      # The start list is the one thing contributors change most often, and a
+      # broken roster file should fail here rather than at the bell.
+      - name: Validate the start list
+        run: node dist/src/cli.js roster
+
+      # A race that cannot run end to end is a broken race, whatever the unit
+      # tests say. This is the smoke test that would have caught it.
+      - name: Run a race
+        run: node dist/src/cli.js simulate --seed CI-SMOKE --json /tmp/race.json
+
+      - name: Check the race produced a result
+        run: |
+          node -e '
+            const r = require("/tmp/race.json");
+            const { summary, yards } = r;
+            if (summary.status !== "finished") throw new Error("race did not finish");
+            if (yards.length < 5) throw new Error(`suspiciously short race: ${yards.length} yards`);
+            if (summary.entrants.length < 2) throw new Error("not enough entrants");
+            const standing = summary.entrants.filter((e) => e.status === "in_corral");
+            if (standing.length > 0) throw new Error("race ended with entrants still in the corral");
+            console.log(
+              `ok: ${yards.length} yards, ` +
+              (summary.winner ? `winner ${summary.winner.name}` : "no winner")
+            );
+          '

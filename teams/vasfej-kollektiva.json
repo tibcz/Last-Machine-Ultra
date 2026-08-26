@@ -1,0 +1,11 @@
+{
+  "team": "Vasfej Kollektiva",
+  "slug": "vasfej-kollektiva",
+  "contact": "vasfej@example.com",
+  "country": "HU",
+  "motto": "Nem sietunk. Csak nem allunk meg.",
+  "entrants": [
+    { "name": "Vasfej I", "adapter": "local", "bot": "grinder" },
+    { "name": "Vasfej II", "adapter": "local", "bot": "bricklayer" }
+  ]
+}

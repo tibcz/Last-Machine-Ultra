@@ -1,0 +1,10 @@
+{
+  "team": "Kilometer Zero",
+  "slug": "kilometer-zero",
+  "contact": "k0@example.com",
+  "country": "ES",
+  "motto": "The loop does not care.",
+  "entrants": [
+    { "name": "Cero", "adapter": "local", "bot": "pacer" }
+  ]
+}
