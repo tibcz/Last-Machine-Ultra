@@ -8,24 +8,25 @@
     "node": ">=20.11"
   },
   "bin": {
-    "lmu": "./dist/cli.js"
+    "lmu": "./dist/src/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/src/index.js"
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
     "clean": "rm -rf dist",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test dist/test/*.test.js",
-    "lmu": "node dist/cli.js",
-    "race": "npm run build && node dist/cli.js simulate",
-    "serve": "npm run build && node dist/cli.js serve",
-    "roster": "npm run build && node dist/cli.js roster"
+    "lmu": "node dist/src/cli.js",
+    "race": "npm run build && node dist/src/cli.js simulate",
+    "serve": "npm run build && node dist/src/cli.js serve",
+    "roster": "npm run build && node dist/src/cli.js roster"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

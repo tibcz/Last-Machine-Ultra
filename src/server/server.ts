@@ -23,6 +23,11 @@ const here = dirname(fileURLToPath(import.meta.url));
 export interface ServeOptions {
   port: number;
   teams: TeamFile[];
+  /**
+   * Interface to bind. Loopback by default: the dashboard has no auth, and
+   * /api/teams serves the roster, so opening it to the network is a choice
+   * the operator makes with --host rather than one they inherit.
+   */
   host?: string;
 }
 
@@ -186,9 +191,11 @@ export async function serveRace(race: Race, options: ServeOptions): Promise<void
     res.end('not found');
   });
 
-  await new Promise<void>((resolve) => server.listen(options.port, options.host ?? '0.0.0.0', resolve));
+  const host = options.host ?? '127.0.0.1';
+  await new Promise<void>((resolve) => server.listen(options.port, host, resolve));
 
-  const address = `http://localhost:${options.port}`;
+  const shown = host === '0.0.0.0' || host === '::' || host === '127.0.0.1' ? 'localhost' : host;
+  const address = `http://${shown}:${options.port}`;
   console.log(`${c.bold('LAST MACHINE ULTRA')} ${c.grey('live')}`);
   console.log(`  ${c.cyan(address)}`);
   console.log(`  ${c.grey(`seed ${race.seed}, ${race.clock.label}`)}`);

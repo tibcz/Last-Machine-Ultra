@@ -164,7 +164,8 @@ async function cmdServe(args: Args): Promise<void> {
   });
 
   const port = num(args, 'port', 8080);
-  await serveRace(race, { port, teams });
+  const host = args.flags.get('host');
+  await serveRace(race, { port, teams, ...(host ? { host } : {}) });
 }
 
 async function cmdRoster(args: Args): Promise<void> {
@@ -300,6 +301,11 @@ ${c.bold('COMMON OPTIONS')}
   --hours <n>         safety stop (default: 72)
   --hour-ms <ms>      how long an hour lasts (default: 3600000)
   --clock <mode>      wall | compressed | instant
+
+${c.bold('SERVE OPTIONS')}
+  --port <n>          dashboard port (default: 8080)
+  --host <addr>       interface to bind (default: 127.0.0.1).
+                      Use 0.0.0.0 to let the rest of the network watch.
 
 ${c.bold('EXAMPLES')}
   ${c.grey('# a whole race, instantly')}

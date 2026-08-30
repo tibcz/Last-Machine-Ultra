@@ -194,6 +194,10 @@ A dark trackside dashboard on `http://localhost:8080`: the current yard's
 dials, the corral thinning out, and a live feed. Updates over server-sent
 events. `--clock wall` runs it for real, on the hour, for as long as it takes.
 
+It binds loopback, so the dashboard is yours alone. There is no auth on it and
+`/api/teams` serves the roster, so letting the rest of the room watch is an
+explicit `--host 0.0.0.0`.
+
 ## How it's built
 
 TypeScript, Node 20+, **zero runtime dependencies**. Nothing but the standard
